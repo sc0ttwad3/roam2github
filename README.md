@@ -36,7 +36,7 @@ Roam-to-git has offered me great peace of mind knowing my Roam data is safe. How
 - Markdown support (2021-02-04)
 - Allow setup of public repo for running Actions and committing to private repo for backup, in order to bypass minute limit for private GitHub Actions (2021-02-18)
 
-### EDN Backups are live!
+### EDN Backups are live
 
 The backup has a check to make sure the formatted EDN (which only adds extra linebreaks and indentation) can be parsed back to match exactly with the original before saving it. It will exit with an error if it can't, so you can rest assured that the formatting doesn't mess with the file integrity. I also tested that the formatted EDN can be used to successfully restore graphs.
 
