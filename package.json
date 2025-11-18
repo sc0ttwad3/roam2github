@@ -18,8 +18,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/everruler12/roam2github.git"
+    "url": "https://github.com/sc0ttwad3/roam2github.git"
   },
-  "author": "everruler12",
+  "author": "sc0ttwad3",
+
   "license": "MIT"
 }
