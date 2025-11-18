@@ -1,10 +1,6 @@
 # Roam2Github
 
-⚠️
-**I no longer maintain this project, since Roam has Auto Backups included natively (and I've stopped using Roam as my primary second brain).**
-⚠️
-
----
+THIS is MY FORK. I'm updating it to work with the very latest node and GitHub actions.
 
 [Click here to view guide on setting up free, unlimited, automatic Roam backups](https://www.notion.so/Roam2Github-Backup-Guide-650925859a4a42cf940e3fb74f5189f9)
 
@@ -12,7 +8,7 @@
 
 ---
 
-This project was inspired by https://github.com/MatthieuBizien/roam-to-git
+This project was inspired by by [MatthieuBizien/roam-to-git](https://github.com/MatthieuBizien/roam-to-git) and [everruler12/roam2github](https://github.com/everruler12/roam2github)
 
 Roam-to-git has offered me great peace of mind knowing my Roam data is safe. However, my backups regularly failed with unknown errors multiple times a week. People were emailing me with the same issues, and I couldn't help. Then it got to the point on 2021-01-28 where all my backups were failing. Roam-to-git's creator didn't seem active with addressing the issues, and I don't know enough Python fix his code. So I decided to write my own backup solution from scratch using Node— with clearer logging to make troubleshooting easier.
 
@@ -55,7 +51,7 @@ You can now backup multiple graphs without having to create a new GitHub repo fo
 - Page titles longer than 255 characters are automatically truncated (though they lose the .md extension)
 - no subdirectories
 - no blank files
-- ~~The logs will list the files that have been renamed or overwritten.~~ The logs no longer display file names, as this would be a privacy concern for the new way to run Actions publicly. 
+- ~~The logs will list the files that have been renamed or overwritten.~~ The logs no longer display file names, as this would be a privacy concern for the new way to run Actions publicly.
 
 Unfortunate side-effect with markdown backups: files with duplicate names are overwritten (like [[test]] and [[Test]]). (This was also present in roam-to-git)
 
