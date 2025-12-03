@@ -12,12 +12,12 @@ if (fs.existsSync(path.join(__dirname, '.env'))) { // check for local .env
     require('dotenv').config()
 }
 
-const { ROAM_EMAIL, ROAM_PASSWORD, ROAM_GRAPH, BACKUP_JSON, BACKUP_EDN, BACKUP_MARKDOWN, MD_REPLACEMENT, MD_SKIP_BLANKS, TIMEOUT } = process.env
+const { R2G_ROAM_EMAIL, R2G_ROAM_PASSWORD, R2G_ROAM_GRAPH, R2G_BACKUP_JSON, R2G_BACKUP_EDN, R2G_BACKUP_MARKDOWN, R2G_MD_REPLACEMENT, R2G_MD_SKIP_BLANKS, R2G_TIMEOUT } = process.env
 // IDEA - MD_SEPARATE_DN put daily notes in separate directory. Maybe option for namespaces to be in separate folders, the default behavior.
 
-if (!ROAM_EMAIL) error('Secrets error: ROAM_EMAIL not found')
-if (!ROAM_PASSWORD) error('Secrets error: ROAM_PASSWORD not found')
-if (!ROAM_GRAPH) error('Secrets error: ROAM_GRAPH not found')
+if (!R2G_ROAM_EMAIL) error('Secrets error: ROAM_EMAIL not found')
+if (!R2G_ROAM_PASSWORD) error('Secrets error: ROAM_PASSWORD not found')
+if (!R2G_ROAM_GRAPH) error('Secrets error: ROAM_GRAPH not found')
 
 const graph_names = ROAM_GRAPH.split(/,|\n/)  // comma or linebreak separator
     .map(g => g.trim())// remove extra spaces
@@ -173,7 +173,8 @@ async function roam_login(browser) {
             // log('- (Wait 10 seconds for auto-refresh)')
             // await page.waitForTimeout(10000) // because Roam auto refreshes the sign-in page, as mentioned here https://github.com/MatthieuBizien/roam-to-git/issues/87#issuecomment-763281895 (and can be seen in non-headless browser)
 
-            await page.waitForSelector('.loading-astrolabe', { timeout: 20000 })
+            log('- Waiting for auto-refresh (astrolabe spinner)')
+            await page.waitForSelector('.loading-astrolabe', { timeout: 60000 })
             await page.waitForSelector('.loading-astrolabe', { hidden: true })
             // log('- auto-refreshed')
 
@@ -231,7 +232,8 @@ async function roam_open_graph(page, graph_name) {
             //log('- astrolabe spinning stopped')
 
             // try {
-            await page.waitForSelector('.roam-app') // add short timeout here, if fails, don't exit code 1, and instead CHECK if have permission to view graph
+            log('- Waiting for .roam-app selector')
+            await page.waitForSelector('.roam-app', { timeout: timeout }) // use global timeout
             // } catch (err) {
             //     await page.waitForSelector('.navbar') // Likely screen saying 'You do not have permission to view this database'
             //     reject()
@@ -249,8 +251,8 @@ async function roam_export(page, filetype, download_dir) {
         try {
             await fs.ensureDir(download_dir)
 
-            // log('- Checking for "..." button', filetype)
-            await page.waitForSelector('.bp3-icon-more')
+            log('- Checking for "..." button', filetype)
+            await page.waitForSelector('.bp3-icon-more', { timeout: timeout })
 
             log('- (check for "Sync Quick Capture Notes")') // to check for "Sync Quick Capture Notes with Workspace" modal
             await page.waitForTimeout(1000)

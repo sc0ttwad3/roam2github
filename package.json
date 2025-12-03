@@ -4,14 +4,13 @@
   "description": "Automatic Roam Research backups",
   "main": "roam2github.js",
   "dependencies": {
-    "dotenv": "^8.2.0",
+    "dotenv": "^17.2.3",
     "edn-formatter": "everruler12/edn-formatter",
     "extract-zip": "everruler12/extract-zip",
-    "fs-extra": "^9.1.0",
-    "puppeteer": "^5.5.0",
+    "fs-extra": "^11.3.2",
+    "puppeteer": "^24.31.0",
     "sanitize-filename": "^1.6.3"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "node roam2github.js",
     "backup": "node backup.js"
@@ -21,6 +20,5 @@
     "url": "https://github.com/sc0ttwad3/roam2github.git"
   },
   "author": "sc0ttwad3",
-
   "license": "MIT"
 }
