@@ -47,7 +47,7 @@ const tmp_dir = path.join(__dirname, 'tmp')
 // (async () => {
 // const repo_path = await getRepoPath()
 const repo_path = getRepoPath()
-const backup_dir = repo_path ? repo_path : path.join(__dirname, 'backup')
+const backup_dir = repo_path ? repo_path : path.join(__dirname, 'backup') // if no repo_path use local path
 // })();
 
 
@@ -104,7 +104,6 @@ init()
 
 async function newPage(browser) {
     const page = await browser.newPage()
-
     page.setDefaultTimeout(timeout)
     // page.on('console', consoleObj => console.log(consoleObj.text())) // for console.log() to work in page.evaluate() https://stackoverflow.com/a/46245945
 

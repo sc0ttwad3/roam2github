@@ -1,0 +1,2 @@
+extract_instructions "https://eriknewhard.notion.site/Roam3Github-Update-Instructions-c594a2931b694010814001c8a20fa961" | convert_to_markdown | Tee-Object -FilePath ".\extracted_instructions.md" | create_visualization
+
