@@ -12,33 +12,33 @@ if (fs.existsSync(path.join(__dirname, '.env'))) { // check for local .env
     require('dotenv').config()
 }
 
-const { R2G_ROAM_EMAIL, R2G_ROAM_PASSWORD, R2G_ROAM_GRAPH, R2G_BACKUP_JSON, R2G_BACKUP_EDN, R2G_BACKUP_MARKDOWN, R2G_MD_REPLACEMENT, R2G_MD_SKIP_BLANKS, R2G_TIMEOUT } = process.env
+const { R2G_EMAIL, R2G_PASSWORD, R2G_GRAPH, R2G_BACKUP_JSON, R2G_BACKUP_EDN, R2G_BACKUP_MARKDOWN, R2G_MD_REPLACEMENT, R2G_MD_SKIP_BLANKS, R2G_TIMEOUT } = process.env
 // IDEA - MD_SEPARATE_DN put daily notes in separate directory. Maybe option for namespaces to be in separate folders, the default behavior.
 
-if (!R2G_ROAM_EMAIL) error('Secrets error: ROAM_EMAIL not found')
-if (!R2G_ROAM_PASSWORD) error('Secrets error: ROAM_PASSWORD not found')
-if (!R2G_ROAM_GRAPH) error('Secrets error: ROAM_GRAPH not found')
+if (!R2G_EMAIL) error('Secrets error: R2G_EMAIL not found')
+if (!R2G_PASSWORD) error('Secrets error: R2G_PASSWORD not found')
+if (!R2G_GRAPH) error('Secrets error: R2G_GRAPH not found')
 
-const graph_names = ROAM_GRAPH.split(/,|\n/)  // comma or linebreak separator
+const graph_names = R2G_GRAPH.split(/,|\n/)  // comma or linebreak separator
     .map(g => g.trim())// remove extra spaces
     .filter(g => g != '') // remove blank lines
 // can also check "Not a valid name. Names can only contain letters, numbers, dashes and underscores." message that Roam gives when creating a new graph
 
 const backup_types = [
-    { type: "JSON", backup: BACKUP_JSON },
-    { type: "EDN", backup: BACKUP_EDN },
-    { type: "Markdown", backup: BACKUP_MARKDOWN }
+    { type: "JSON", backup: R2G_BACKUP_JSON },
+    { type: "EDN", backup: R2G_BACKUP_EDN },
+    { type: "Markdown", backup: R2G_BACKUP_MARKDOWN }
 ].map(f => {
     (f.backup === undefined || f.backup.toLowerCase() === 'true') ? f.backup = true : f.backup = false
     return f
 })
 // what about specifying filetype for each graph? Maybe use settings.json in root of repo. But too complicated for non-programmers to set up.
 
-const md_replacement = MD_REPLACEMENT || '�'
+const md_replacement = R2G_MD_REPLACEMENT || ''
 
-const md_skip_blanks = (MD_SKIP_BLANKS && MD_SKIP_BLANKS.toLowerCase()) === 'false' ? false : true
+const md_skip_blanks = (R2G_MD_SKIP_BLANKS && R2G_MD_SKIP_BLANKS.toLowerCase()) === 'false' ? false : true
 
-const timeout = TIMEOUT || 600000 // 10min default
+const timeout = R2G_TIMEOUT || 600000 // 10min default
 
 const tmp_dir = path.join(__dirname, 'tmp')
 
@@ -108,7 +108,7 @@ async function newPage(browser) {
 async function init() {
     try {
 
-        await fs.remove(tmp_dir, { recursive: true })
+        await fs.remove(tmp_dir)
 
         log('Create browser')
         const browser = await puppeteer.launch({ args: ['--no-sandbox'] }) // to run in GitHub Actions
@@ -171,8 +171,8 @@ async function roam_login(browser) {
             await page.waitForSelector('input[name="email"]')
 
             log('- (Wait for auto-refresh)')
-            // log('- (Wait 10 seconds for auto-refresh)')
-            // await page.waitForTimeout(10000) // because Roam auto refreshes the sign-in page, as mentioned here https://github.com/MatthieuBizien/roam-to-git/issues/87#issuecomment-763281895 (and can be seen in non-headless browser)
+            log('- (Wait 10 seconds for auto-refresh)')
+            await new Promise(r => setTimeout(r, 10000)) // because Roam auto refreshes the sign-in page, as mentioned here https://github.com/MatthieuBizien/roam-to-git/issues/87#issuecomment-763281895 (and can be seen in non-headless browser)
 
             log('- Waiting for auto-refresh (astrolabe spinner)')
             await page.waitForSelector('.loading-astrolabe', { timeout: 60000 })
@@ -180,10 +180,10 @@ async function roam_login(browser) {
             // log('- auto-refreshed')
 
             log('- Filling email field')
-            await page.type('input[name="email"]', ROAM_EMAIL)
+            await page.type('input[name="email"]', R2G_EMAIL)
 
             log('- Filling password field')
-            await page.type('input[name="password"]', ROAM_PASSWORD)
+            await page.type('input[name="password"]', R2G_PASSWORD)
 
             log('- Checking for "Sign In" button')
             await page.waitForFunction(() => [...document.querySelectorAll('button.bp3-button')].find(button => button.innerText == 'Sign In'))
@@ -256,7 +256,7 @@ async function roam_export(page, filetype, download_dir) {
             await page.waitForSelector('.bp3-icon-more', { timeout: timeout })
 
             log('- (check for "Sync Quick Capture Notes")') // to check for "Sync Quick Capture Notes with Workspace" modal
-            await page.waitForTimeout(1000)
+            await new Promise(r => setTimeout(r, 1000))
 
             if (await page.$('.rm-quick-capture-sync-modal')) {
                 log('- Detected "Sync Quick Capture Notes" modal. Closing')
@@ -416,7 +416,7 @@ async function format_and_save(filetype, download_dir, graph_name) {
                 const markdown_dir = path.join(backup_dir, 'markdown', graph_name)
 
                 // log('- Removing old markdown directory')
-                await fs.remove(markdown_dir, { recursive: true }) // necessary, to update renamed pages
+                await fs.remove(markdown_dir) // necessary, to update renamed pages
 
                 log('- Saving Markdown')
 

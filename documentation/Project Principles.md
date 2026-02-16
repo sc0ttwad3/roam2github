@@ -1,7 +1,7 @@
 
 # Project Principles
 
-- Volta: use the `volta` toolchain manager; this requires `volta run ` before running executables.
+- Volta: use the `volta` toolchain manager; this requires `volta run` before running executables.
 
 ## Project Structure & Module Organization
 
@@ -22,7 +22,6 @@
 
 - Framework: Jest or Vitest; target ≥80% line coverage for new code.
 - Place tests beside code or under `test/`; name `feature-name.test.js`.
-- Mock Spotify network I/O; inject API clients to keep tests deterministic.
 
 ## Commit & Pull Request Guidelines
 
@@ -32,7 +31,6 @@
 ## Security & Configuration Tips
 
 - Never commit credentials. Use `.env` with `dotenv` and local OS keychain/config dir for tokens.
-- Required env vars: `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REDIRECT_URI`.
 
 ## Architecture Overview
 
@@ -43,4 +41,3 @@
 
 - Ensure cross-platform support (use `path.join`, avoid Bash-only scripts).
 - Prefer small, testable functions; document public APIs with JSDoc.
-
