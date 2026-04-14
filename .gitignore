@@ -6,6 +6,9 @@ tmp
 # Special to keep large site uploaded material export, local
 *assets.rar
 
+# Keeps archived material local
+*.rar
+
 # Coders
 .roo
 
